@@ -70,9 +70,23 @@ class SnakeGameAI:
         running = True
 
         while running:
+            # 当前游戏帧是否已经转向
+            turned_this_frame = False
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.KEYDOWN:
+                    # 按 ESC 退出
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
+
+                    # 每一帧最多改变一次方向
+                    elif not turned_this_frame:
+                        turned_this_frame = self._change_direction(event.key)
+
+            if not running:
+                break
 
             # 更新蛇的位置
             self._move()
@@ -107,6 +121,39 @@ class SnakeGameAI:
 
         # 删除最后一节蛇尾
         self.snake.pop()
+
+    def _change_direction(self, key):
+        # 将键盘按键映射到移动方向
+        key_map = {
+            pygame.K_UP: Direction.UP,
+            pygame.K_DOWN: Direction.DOWN,
+            pygame.K_LEFT: Direction.LEFT,
+            pygame.K_RIGHT: Direction.RIGHT
+        }
+
+        new_direction = key_map.get(key)
+
+        # 不是方向键不处理
+        if new_direction is None:
+            return False 
+
+        # 定义每个方向的相反方向
+        opposite = {
+            Direction.UP: Direction.DOWN,
+            Direction.DOWN: Direction.UP,
+            Direction.LEFT: Direction.RIGHT,
+            Direction.RIGHT: Direction.LEFT 
+        }
+        
+        # 禁止直接反向或者重复转向
+        if new_direction == opposite[self.direction]:
+            return False
+        
+        if new_direction == self.direction:
+            return False
+        
+        self.direction = new_direction
+        return True
 
 if __name__ == '__main__':
     game = SnakeGameAI()
