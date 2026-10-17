@@ -10,10 +10,10 @@ Height = 480
 BLOCK_SIZE = 20
 
 class Direction(Enum):
-    Right = 1
-    Left = 2
-    Up = 3
-    Down = 4
+    RIGHT = 1
+    LEFT = 2
+    UP = 3
+    DOWN = 4
 
 Point = namedtuple("Point", ["x", "y"])
 
@@ -34,7 +34,7 @@ class SnakeGameAI:
         self.clock = pygame.time.Clock()
 
         # 初始化蛇的方向和身体
-        self.direction = Direction.Right
+        self.direction = Direction.RIGHT
 
         self.head = Point(
             self.width // 2,
@@ -74,10 +74,39 @@ class SnakeGameAI:
                 if event.type == pygame.QUIT:
                     running = False
 
+            # 更新蛇的位置
+            self._move()
+            
+            # 绘制游戏画面
             self.draw()
-            self.clock.tick(30)
+
+            # 控制帧率
+            self.clock.tick(8)
         
         pygame.quit()
+
+    def _move(self):
+        x = self.head.x
+        y = self.head.y
+
+        # 根据当前方向更新蛇头坐标
+        if self.direction == Direction.RIGHT:
+            x += BLOCK_SIZE
+        elif self.direction == Direction.LEFT:
+            x -= BLOCK_SIZE
+        elif self.direction == Direction.UP:
+            y -= BLOCK_SIZE
+        elif self.direction == Direction.DOWN:
+            y += BLOCK_SIZE
+        
+        # 创建新的蛇头
+        self.head = Point(x, y)
+
+        # 将新蛇头放到列表开头
+        self.snake.insert(0, self.head)
+
+        # 删除最后一节蛇尾
+        self.snake.pop()
 
 if __name__ == '__main__':
     game = SnakeGameAI()
