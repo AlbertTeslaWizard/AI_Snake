@@ -21,21 +21,8 @@ Point = namedtuple("Point", ["x", "y"])
 
 class SnakeGameAI:
     def __init__(self):
-        pygame.init()
         self.width = Width 
         self.height = Height
-
-        # 创建游戏窗口
-        self.display = pygame.display.set_mode(
-            (self.width, self.height)
-        )
-        pygame.display.set_caption("Snake AI")
-
-        # 控制帧率
-        self.clock = pygame.time.Clock()
-
-        # 创建用于显示得分的字体
-        self.font = pygame.font.Font(None, 32)
 
         # 初始化游戏状态
         self.reset()
@@ -94,97 +81,9 @@ class SnakeGameAI:
         
         return False
 
-    def draw(self):
-        # 清空窗口
-        self.display.fill((20, 20, 20))
-
-        # 绘制每一节蛇身
-        for segment in self.snake:
-            pygame.draw.rect(
-                self.display,
-                (0, 200, 100),
-                (
-                    segment.x,
-                    segment.y,
-                    BLOCK_SIZE,
-                    BLOCK_SIZE
-                )
-            )
-
-
-        # 绘制食物
-        if self.food is not None:
-            pygame.draw.rect(
-                self.display,
-                (220, 50, 50),
-                (
-                    self.food.x,
-                    self.food.y,
-                    BLOCK_SIZE,
-                    BLOCK_SIZE
-                )
-            )
-
-        score_text = self.font.render(
-            f"Score: {self.score}",
-            True,
-            (255, 255, 255)
-        )
-
-        self.display.blit(score_text, (10, 10))
-
-        # 游戏结束时显示提示
-        if self.game_over:
-            if self.won:
-                message = "You Win!"
-            else:
-                message = "Game Over!"
-
-            game_over_text = self.font.render(
-                message,
-                True,
-                (255, 255, 255)
-            )
-
-            restart_text = self.font.render(
-                "Press R to Restart",
-                True,
-                (255, 255, 255)
-            )
-
-            # 把提示绘制在窗口中央
-            self.display.blit(
-                game_over_text,
-                game_over_text.get_rect(
-                    center = (self.width // 2, self.height // 2 - 20)
-                )
-            )
-
-            self.display.blit(
-                restart_text,
-                restart_text.get_rect(
-                    center = (self.width // 2, self.height // 2 + 20)
-                )
-            )
-
-        # 暂停时显示提示 
-        if self.paused and not self.game_over:
-            pause_text = self.font.render(
-                "PAUSED - Press SPACE to Resume",
-                True,
-                (255, 255, 255)
-            )
-
-            pause_rect = pause_text.get_rect(
-                center = (self.width // 2, self.height // 2)
-            )
-
-            self.display.blit(pause_text, pause_rect)
-
-        pygame.display.flip()
-
-    def run(self):
+    def run(self, renderer):
         running = True
+        clock = pygame.time.Clock()
 
         while running:
             # 当前游戏帧是否已经转向
@@ -223,10 +122,10 @@ class SnakeGameAI:
                     self.game_over = True
             
             # 绘制游戏画面
-            self.draw()
+            renderer.draw(self)
 
             # 控制帧率
-            self.clock.tick(8)
+            clock.tick(8)
         
         pygame.quit()
 
@@ -290,7 +189,3 @@ class SnakeGameAI:
         
         self.direction = new_direction
         return True
-
-if __name__ == '__main__':
-    game = SnakeGameAI()
-    game.run()
