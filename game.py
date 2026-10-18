@@ -1,4 +1,3 @@
-import pygame
 import random
 from enum import Enum
 from collections import namedtuple
@@ -81,54 +80,6 @@ class SnakeGameAI:
         
         return False
 
-    def run(self, renderer):
-        running = True
-        clock = pygame.time.Clock()
-
-        while running:
-            # 当前游戏帧是否已经转向
-            turned_this_frame = False
-            
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                elif event.type == pygame.KEYDOWN:
-                    # 按 ESC 退出
-                    if event.key == pygame.K_ESCAPE:
-                        running = False
-
-                    # 游戏结束后，按 R 重新开始
-                    elif self.game_over:
-                        if event.key == pygame.K_r:
-                            self.reset()
-
-                    # Space: 暂停或继续
-                    elif event.key == pygame.K_SPACE:
-                        self.paused = not self.paused
-
-                    # 正常游戏时处理方向键
-                    elif not self.paused and not turned_this_frame:
-                        turned_this_frame = self._change_direction(event.key)
-
-            if not running:
-                break
-
-            # 没有结束才继续移动
-            if not self.game_over and not self.paused:
-                self._move()
-
-                # 判断移动后是否发生碰撞
-                if self._is_collision():
-                    self.game_over = True
-            
-            # 绘制游戏画面
-            renderer.draw(self)
-
-            # 控制帧率
-            clock.tick(8)
-        
-        pygame.quit()
-
     def _move(self):
         x = self.head.x 
         y = self.head.y
@@ -157,35 +108,14 @@ class SnakeGameAI:
             # 没吃到食物则删除蛇尾
             self.snake.pop()
 
-    def _change_direction(self, key):
-        # 将键盘按键映射到移动方向
-        key_map = {
-            pygame.K_UP: Direction.UP,
-            pygame.K_DOWN: Direction.DOWN,
-            pygame.K_LEFT: Direction.LEFT,
-            pygame.K_RIGHT: Direction.RIGHT
-        }
+    def step(self):
+        # 已结束的游戏不再移动
+        if self.game_over:
+            return
 
-        new_direction = key_map.get(key)
+        # 移动蛇
+        self._move()
 
-        # 不是方向键不处理
-        if new_direction is None:
-            return False 
-
-        # 定义每个方向的相反方向
-        opposite = {
-            Direction.UP: Direction.DOWN,
-            Direction.DOWN: Direction.UP,
-            Direction.LEFT: Direction.RIGHT,
-            Direction.RIGHT: Direction.LEFT 
-        }
-        
-        # 禁止直接反向或者重复转向
-        if new_direction == opposite[self.direction]:
-            return False
-        
-        if new_direction == self.direction:
-            return False
-        
-        self.direction = new_direction
-        return True
+        # 检测碰撞
+        if self._is_collision():
+            self.game_over = True
