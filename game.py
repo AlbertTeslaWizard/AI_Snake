@@ -67,15 +67,27 @@ class SnakeGameAI:
             self.won = True
             self.game_over = True
 
-    def _is_collision(self):
+    def _is_collision(self, point=None):
+        # 没有指定位置：根据当前蛇头
+        if point is None:
+            point = self.head
+            body = self.snake[1:]
+        else:
+            # 检测下一步的候选位置
+            body = self.snake[1:]
+
+            # 不吃食物时，蛇尾下一步会离开
+            if point != self.food: 
+                body = body[:-1]
+
         # 检测是否撞墙
-        if self.head.x < 0 or self.head.x >= self.width:
+        if point.x < 0 or point.x >= self.width:
             return True
-        if self.head.y < 0 or self.head.y >= self.height:
+        if point.y < 0 or point.y >= self.height:
             return True
         
         # 检测是否碰撞到自己的身体
-        if self.head in self.snake[1:]:
+        if point in body:
             return True
         
         return False
