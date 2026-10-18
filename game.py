@@ -119,3 +119,55 @@ class SnakeGameAI:
         # 检测碰撞
         if self._is_collision():
             self.game_over = True
+
+    def _apply_action(self, action):
+        # 按顺时针排列四个方向
+        clockwise = [
+            Direction.RIGHT,
+            Direction.DOWN,
+            Direction.LEFT,
+            Direction.UP 
+        ]
+
+        # 获取当前方向索引
+        idx = clockwise.index(self.direction)
+        if action == [1, 0, 0]:
+            # 直行
+            new_idx = idx
+        elif action == [0, 1, 0]:
+            # 右转 90 度
+            new_idx = (idx + 1) % 4
+        elif action == [0, 0, 1]:
+            # 左转 90 度 
+            new_idx = (idx - 1) % 4
+        else:
+            raise ValueError(f"Invalid action: {action}")
+
+        # 更新方向
+        self.direction = clockwise[new_idx]
+
+    def play_step(self, action):
+        # 游戏已经结束，不再执行动作
+        if self.game_over:
+            return 0, True, self.score
+
+        # 记录移动前的分数
+        old_score = self.score
+
+        # 1. Agent 决定移动方向
+        self._apply_action(action)
+
+        # 2. 执行游戏更新
+        self.step()
+
+        # 3. 计算奖励
+        if self.game_over and not self.won:
+            reward = -10
+
+        elif self.score > old_score:
+            reward = 10
+        else:
+            reward = 0
+
+        # 4. 返回反馈
+        return reward, self.game_over, self.score
