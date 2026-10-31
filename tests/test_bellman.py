@@ -1,4 +1,4 @@
-import torch 
+import torch
 
 # 当前动作获得的奖励
 reward = torch.tensor([0.0])

@@ -1,4 +1,5 @@
-from game import Direction, Point, BLOCK_SIZE
+from .constants import BLOCK_SIZE, Direction, Point
+
 
 def next_point(point, direction):
     offsets = {
@@ -52,11 +53,11 @@ def get_state(game):
     )
 
     food_r = (
-        game.food is not None and game.food.x > game.head.x 
+        game.food is not None and game.food.x > game.head.x
     )
 
     food_u = (
-        game.food is not None and game.food.y < game.head.y 
+        game.food is not None and game.food.y < game.head.y
     )
 
     food_d = (
@@ -68,7 +69,7 @@ def get_state(game):
         danger_right,
         danger_left,
 
-        # 移动方向 
+        # 移动方向
         direction_l,
         direction_r,
         direction_u,

@@ -1,8 +1,7 @@
 
 import unittest
 
-from game import SnakeGameAI, Direction, Point
-from state import get_state
+from snake_ai.game import Direction, Point, SnakeGameAI, get_state
 
 
 class TestState(unittest.TestCase):

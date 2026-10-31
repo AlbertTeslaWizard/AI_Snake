@@ -1,5 +1,7 @@
 import pygame
-from game import Direction
+
+from ..game.constants import Direction
+
 
 class HumanController:
     def __init__(self, game, render, fps=8):
@@ -16,7 +18,7 @@ class HumanController:
         while running:
             # 每帧最多转向一次
             turned_this_frame = False
-            
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -38,7 +40,7 @@ class HumanController:
                         turned_this_frame = self._change_direction(
                             event.key
                         )
-            
+
             if not running:
                 break
 
@@ -51,9 +53,9 @@ class HumanController:
 
             # 控制游戏帧率
             self.clock.tick(self.fps)
-        
+
         pygame.quit()
-    
+
     def _change_direction(self, key):
         # 键盘按键与方向的映射
         key_map = {
@@ -64,10 +66,10 @@ class HumanController:
         }
 
         new_direction = key_map.get(key)
-        
+
         if new_direction is None:
             return False
-        
+
         # 相反方向映射
         opposite = {
             Direction.UP: Direction.DOWN,
@@ -79,11 +81,11 @@ class HumanController:
 
         # 禁止直接反向
         if new_direction == opposite[self.game.direction]:
-            return False 
+            return False
 
         # 相同方向无需改变
         if new_direction == self.game.direction:
             return False
-        
+
         self.game.direction = new_direction
-        return True 
+        return True

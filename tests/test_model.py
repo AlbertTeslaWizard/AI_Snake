@@ -1,5 +1,6 @@
-import torch 
-from model import QNetwork
+import torch
+
+from snake_ai.rl import QNetwork
 
 # 创建网络
 model = QNetwork()

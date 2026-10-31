@@ -1,6 +1,6 @@
-from game import SnakeGameAI
-from renderer import GameRenderer
-from human import HumanController
+from snake_ai.game import SnakeGameAI
+from snake_ai.ui import GameRenderer, HumanController
+
 
 def main():
     # 创建游戏对象
@@ -11,13 +11,13 @@ def main():
         game.width,
         game.height
     )
-    
+
     controller = HumanController(
         game,
         renderer,
         fps=8
     )
-    
+
     # 启动游戏
     controller.run()
 

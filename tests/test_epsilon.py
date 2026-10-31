@@ -1,9 +1,9 @@
-from agent import DQNAgent
+from snake_ai.rl import DQNAgent
 
 agent = DQNAgent(
     epsilon=1.0,
     epsilon_min=0.05,
-    epsilon_decay=0.995 
+    epsilon_decay=0.995
 )
 
 for episode in range(1, 501):

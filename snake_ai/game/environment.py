@@ -1,27 +1,12 @@
 import random
-from enum import Enum
-from collections import namedtuple
 
-# 游戏窗口尺寸
-Width = 640
-Height = 480
-
-# 每一节蛇身的宽高
-BLOCK_SIZE = 20
-
-class Direction(Enum):
-    RIGHT = 1
-    LEFT = 2
-    UP = 3
-    DOWN = 4
-
-Point = namedtuple("Point", ["x", "y"])
+from .constants import BLOCK_SIZE, HEIGHT, WIDTH, Direction, Point
 
 
 class SnakeGameAI:
     def __init__(self):
-        self.width = Width 
-        self.height = Height
+        self.width = WIDTH
+        self.height = HEIGHT
 
         # 初始化游戏状态
         self.reset()
@@ -46,7 +31,7 @@ class SnakeGameAI:
         self.won = False
         self.paused = False
 
-        self.food = None 
+        self.food = None
         self._place_food()
 
     def _place_food(self):
@@ -77,7 +62,7 @@ class SnakeGameAI:
             body = self.snake[1:]
 
             # 不吃食物时，蛇尾下一步会离开
-            if point != self.food: 
+            if point != self.food:
                 body = body[:-1]
 
         # 检测是否撞墙
@@ -85,15 +70,12 @@ class SnakeGameAI:
             return True
         if point.y < 0 or point.y >= self.height:
             return True
-        
+
         # 检测是否碰撞到自己的身体
-        if point in body:
-            return True
-        
-        return False
+        return point in body
 
     def _move(self):
-        x = self.head.x 
+        x = self.head.x
         y = self.head.y
 
         # 根据当前方向更新蛇头坐标
@@ -105,7 +87,7 @@ class SnakeGameAI:
             y -= BLOCK_SIZE
         elif self.direction == Direction.DOWN:
             y += BLOCK_SIZE
-        
+
         # 创建新的蛇头
         self.head = Point(x, y)
 
@@ -138,7 +120,7 @@ class SnakeGameAI:
             Direction.RIGHT,
             Direction.DOWN,
             Direction.LEFT,
-            Direction.UP 
+            Direction.UP
         ]
 
         # 获取当前方向索引
@@ -150,7 +132,7 @@ class SnakeGameAI:
             # 右转 90 度
             new_idx = (idx + 1) % 4
         elif action == [0, 0, 1]:
-            # 左转 90 度 
+            # 左转 90 度
             new_idx = (idx - 1) % 4
         else:
             raise ValueError(f"Invalid action: {action}")

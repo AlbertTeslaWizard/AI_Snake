@@ -1,6 +1,5 @@
-from game import SnakeGameAI 
-from state import get_state
-from agent import DQNAgent
+from snake_ai.game import SnakeGameAI, get_state
+from snake_ai.rl import DQNAgent
 
 # 1. 创建游戏环境
 game = SnakeGameAI()

@@ -1,7 +1,7 @@
-import torch 
-import torch.nn as nn
+import torch
+from torch import nn
 
-from model import QNetwork
+from snake_ai.rl import QNetwork
 
 torch.manual_seed(42)
 
@@ -26,7 +26,7 @@ action = torch.tensor([[2]])
 # 5. 假设这个动作导致游戏结束
 target = torch.tensor([[-10.0]])
 
-# 6. 前向传播, 预测三个 Q 值 
+# 6. 前向传播, 预测三个 Q 值
 q_values = model(state)
 
 # 7. 取出实际执行动作的 Q 值

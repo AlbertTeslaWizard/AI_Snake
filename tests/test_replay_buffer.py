@@ -1,4 +1,4 @@
-from replay_buffer import ReplayBuffer
+from snake_ai.rl import ReplayBuffer
 
 buffer = ReplayBuffer(capacity=3)
 
@@ -11,7 +11,7 @@ for i in range(5):
         action = i % 3,
         reward = float(i),
         next_state = next_state,
-        done = False 
+        done = False
     )
 
 print("Buffer 长度:", len(buffer))

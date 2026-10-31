@@ -1,11 +1,26 @@
-import random 
-import torch 
+import random
 
-from model import QNetwork
+import torch
+
+from .model import QNetwork
+
 
 class DQNAgent:
     def __init__(self, epsilon = 1.0, epsilon_min = 0.05, epsilon_decay = 0.995):
+        # Online Network
         self.model = QNetwork()
+
+        # Target Network
+        self.target_model = QNetwork()
+
+        # 初始化时同步参数
+        self.target_model.load_state_dict(
+            self.model.state_dict()
+        )
+
+        # Target Network 不参与反向传播
+        self.target_model.requires_grad_(False)
+
         self.epsilon = epsilon
         self.epsilon_min = epsilon_min
         self.epsilon_decay = epsilon_decay
@@ -31,7 +46,12 @@ class DQNAgent:
         action[action_idx] = 1
 
         return action_idx, action
-    
+
     def decay_epsilon(self):
         self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
+
+    def sync_target(self):
+        self.target_model.load_state_dict(
+            self.model.state_dict()
+        )
 
